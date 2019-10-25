@@ -78,5 +78,7 @@ Author Information
 ------------------
 
 Mattia Martinello
+
 mattia@mattiamartinello.com
+
 https://www.linkedin.com/in/mattiamartinello/
