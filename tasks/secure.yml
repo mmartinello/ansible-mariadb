@@ -1,0 +1,63 @@
+---
+- debug:
+    msg: "_mariadb_login_user: '{{ _mariadb_login_user }}, _mariadb_login_password: '{{ _mariadb_login_password }}', _mariadb_cmd_login: '{{ _mariadb_cmd_login }}'"
+
+- name: Set local administrative user
+  mysql_user:
+    user: '{{ mariadb_admin_username }}'
+    password: '{{ mariadb_admin_password | default(omit) }}'
+    host: 'localhost'
+    priv: '*.*:ALL,GRANT'
+    state: present
+    check_implicit_admin: true
+    login_unix_socket: '{{ mariadb_socket_path }}'
+  no_log: mariadb_debug == false
+
+- name: Copy .my.cnf file with credentials for administrative user
+  template:
+    src: "admin-my.cnf.j2"
+    dest: "{{ _admin_mycnf_file_path }}"
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Remove test database
+  mysql_db:
+    name: test
+    state: absent
+  no_log: mariadb_debug == false
+
+- name: Fetch all hosts
+  command: mysql -NBe "SELECT Host FROM mysql.user ORDER BY (Host='localhost') ASC"
+  register: mysql_hosts
+  changed_when: false
+
+- name: Remove anonymous user
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+    login_unix_socket: '{{ mariadb_socket_path }}'
+  no_log: mariadb_debug == false
+  with_items: '{{ mysql_hosts.stdout_lines }}'
+
+- name: Add administrative users
+  mysql_user:
+    user: '{{ mariadb_admin_username }}'
+    password: '{{ mariadb_admin_password | default(omit) }}'
+    host: '{{ item }}'
+    priv: '*.*:ALL,GRANT'
+    state: present
+    check_implicit_admin: true
+  no_log: mariadb_debug == false
+  changed_when: false # required for idempotence
+  with_items: '{{ mariadb_admin_hosts }}'
+
+- name: Remove root user if not used
+  mysql_user:
+    user: 'root'
+    host: '{{ item }}'
+    state: absent
+  no_log: mariadb_debug == false
+  when: mariadb_admin_username != 'root'
+  with_items: '{{ mysql_hosts.stdout_lines }}'

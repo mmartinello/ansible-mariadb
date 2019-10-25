@@ -1,0 +1,42 @@
+---
+# MariaDB Role specific variables
+mariadb_apt_repo_url: "http://ams2.mirrors.digitalocean.com/mariadb/repo/"
+mariadb_keyserver: "keyserver.ubuntu.com"
+mariadb_apt_key_id: "0xF1656F24C74CD1D8"
+mariadb_version: "10.4"
+mariadb_socket_path: /var/run/mysqld/mysqld.sock
+
+# Required packages
+mariadb_required_packages:
+  - python-pip
+  - python3-pip
+  - gpg
+
+# Required PIP packages
+mariadb_required_pip_packages:
+  - PyMySQL
+
+# MariaDB Additional Packages
+mariadb_additional_packages:
+  - mysqltuner
+  - percona-toolkit
+  - mariadb-backup
+
+# MariaDB Administrator settings
+mariadb_admin_home: "/root"
+mariadb_admin_username: "root"
+mariadb_admin_password:  "{{ ansible_machine_id | hash('sha1') | truncate(24, True, '') }}"
+
+mariadb_admin_hosts:
+  - localhost
+  - 127.0.0.1
+  - ::1
+
+#########################################################################
+# Do not edit anything below!
+
+# MariaDB Facts
+_admin_mycnf_file_path: "{{ mariadb_admin_home }}/.my.cnf"
+_mariadb_login_user: "root"
+_mariadb_login_password: ""
+_mariadb_cmd_login: "-u root"

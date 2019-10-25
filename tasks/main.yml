@@ -1,0 +1,9 @@
+---
+#- include_tasks: vars.yml
+#  tags: ['always']
+
+- include_tasks: install.yml
+  tags: ['mariadb-install']
+
+- include_tasks: secure.yml
+  tags: ['mariadb-install']

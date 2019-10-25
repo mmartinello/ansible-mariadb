@@ -1,0 +1,18 @@
+---
+- name: Check if root .my.cnf file exists
+  register: admin_mycnf_file
+  stat:
+    path: '{{ _admin_mycnf_file_path }}'
+
+- name: Get MariaDB login credentials from .my.cnf file and set variables
+  set_fact:
+    _mariadb_login_user: "{{ lookup('ini', 'user section=client file=/root/.my.cnf') }}"
+    _mariadb_login_password: "{{ lookup('ini', 'password section=client file=/root/.my.cnf') }}"
+  when: admin_mycnf_file is defined and admin_mycnf_file.stat.exists
+
+- name: Set MariaDB login command
+  set_fact:
+    _mariadb_cmd_login: "-u {{_mariadb_login_user}} -p{{ _mariadb_login_password }}"
+
+- debug:
+    msg: "_mariadb_login_user: '{{ _mariadb_login_user }}, _mariadb_login_password: '{{ _mariadb_login_password }}', _mariadb_cmd_login: '{{ _mariadb_cmd_login }}'"

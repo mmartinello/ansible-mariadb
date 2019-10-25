@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Mattia Martinello
+  description: Ansible role to install and configure MariaDB server
+  company: Mattia Martinello (Servizi Informatici di Mattia Martinello)
+  license: MIT
+
+  min_ansible_version: 2.4
+
+  platforms:
+   - name: Debian
+     versions:
+     - 10
+
+  galaxy_tags:
+    - mariadb
+    - debian
+
+dependencies: []
+  

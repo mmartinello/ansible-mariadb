@@ -1,0 +1,8 @@
+---
+- include_tasks: install-Debian.yml
+  when: ansible_os_family | lower in ['debian', 'ubuntu']
+
+- name: Install required PIP packages
+  pip:
+    name: "{{ mariadb_required_pip_packages }}"
+    state: present
