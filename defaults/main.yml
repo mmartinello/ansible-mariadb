@@ -1,9 +1,19 @@
 ---
 # MariaDB Role specific variables
+
+# MariaDB minor version to be installed
+mariadb_version: "10.11"
+
+# MariaDB APT Repository URL
 mariadb_apt_repo_url: "http://ams2.mirrors.digitalocean.com/mariadb/repo/"
+
+# Keyserver URL
 mariadb_keyserver: "keyserver.ubuntu.com"
+
+# APT Key ID
 mariadb_apt_key_id: "0xF1656F24C74CD1D8"
-mariadb_version: "10.8"
+
+# MariaDB Socket path
 mariadb_socket_path: /var/run/mysqld/mysqld.sock
 
 # Required PIP packages
@@ -20,7 +30,6 @@ mariadb_additional_packages:
 mariadb_admin_home: "/root"
 mariadb_admin_username: "root"
 mariadb_admin_password:  "{{ ansible_machine_id | hash('sha1') | truncate(24, True, '') }}"
-
 mariadb_admin_hosts:
   - localhost
   - 127.0.0.1
