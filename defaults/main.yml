@@ -6,12 +6,6 @@ mariadb_apt_key_id: "0xF1656F24C74CD1D8"
 mariadb_version: "10.8"
 mariadb_socket_path: /var/run/mysqld/mysqld.sock
 
-# Required packages
-mariadb_required_packages:
-  - python-pip
-  - python3-pip
-  - gpg
-
 # Required PIP packages
 mariadb_required_pip_packages:
   - PyMySQL

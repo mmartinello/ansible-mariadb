@@ -11,7 +11,7 @@
     state: present
     check_implicit_admin: true
     login_unix_socket: '{{ mariadb_socket_path }}'
-  no_log: mariadb_debug == false
+  #no_log: mariadb_debug == false
 
 - name: Copy .my.cnf file with credentials for administrative user
   template:
@@ -25,7 +25,7 @@
   mysql_db:
     name: test
     state: absent
-  no_log: mariadb_debug == false
+  #no_log: mariadb_debug == false
 
 - name: Fetch all hosts
   command: mysql -NBe "SELECT Host FROM mysql.user ORDER BY (Host='localhost') ASC"
@@ -38,7 +38,7 @@
     host: "{{ item }}"
     state: absent
     login_unix_socket: '{{ mariadb_socket_path }}'
-  no_log: mariadb_debug == false
+  #no_log: mariadb_debug == false
   with_items: '{{ mysql_hosts.stdout_lines }}'
 
 - name: Add administrative users
@@ -49,7 +49,7 @@
     priv: '*.*:ALL,GRANT'
     state: present
     check_implicit_admin: true
-  no_log: mariadb_debug == false
+  #no_log: mariadb_debug == false
   changed_when: false # required for idempotence
   with_items: '{{ mariadb_admin_hosts }}'
 
@@ -58,6 +58,6 @@
     user: 'root'
     host: '{{ item }}'
     state: absent
-  no_log: mariadb_debug == false
+  #no_log: mariadb_debug == false
   when: mariadb_admin_username != 'root'
   with_items: '{{ mysql_hosts.stdout_lines }}'
